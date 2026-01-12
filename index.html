@@ -65,13 +65,11 @@
             min-height: 100vh;
         }
 
-        /* Heading font fallback */
         .font-heading {
             font-family: 'FK Grotesk', 'Inter', system-ui, sans-serif;
             letter-spacing: -0.02em;
         }
 
-        /* Card hover effects */
         .resource-card {
             transition: all 0.3s ease;
         }
@@ -82,7 +80,6 @@
                         0 9px 13px -7px rgba(0,0,0,0.03);
         }
 
-        /* Filter button styles */
         .filter-btn {
             transition: all 0.2s ease;
         }
@@ -91,19 +88,18 @@
         }
         .filter-btn.active {
             border-color: #262626;
+            background: #262626;
+            color: white;
         }
 
-        /* Whitepaper cover gradient */
-        .whitepaper-gradient {
+        .resource-gradient {
             background: linear-gradient(90deg, #feefd4 0%, #ffd886 49.52%, #ffc59d 100%);
         }
 
-        /* Link button hover */
         .link-btn:hover {
             opacity: 0.7;
         }
 
-        /* Animate in */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -117,6 +113,13 @@
         .animate-in {
             animation: fadeInUp 0.5s ease forwards;
         }
+
+        /* Type badge colors */
+        .badge-guide { background: #E0F2FE; color: #0369A1; }
+        .badge-video { background: #FEE2E2; color: #DC2626; }
+        .badge-blog { background: #F3E8FF; color: #7C3AED; }
+        .badge-event { background: #DCFCE7; color: #16A34A; }
+        .badge-update { background: #FEF3C7; color: #D97706; }
     </style>
 </head>
 <body>
@@ -129,85 +132,131 @@
     <script type="text/babel">
         const { useState, useMemo } = React;
 
-        // Sample resource data
+        // Resource types
+        const TYPES = ["All Types", "Guide", "Video", "Blog", "Event", "Product Update"];
+        const TOPICS = ["All Topics", "Security Awareness", "Phishing", "AI & Deepfakes", "Compliance"];
+
+        // Sample resource data with multiple types
         const RESOURCES = [
             {
                 id: 1,
-                type: "Whitepaper",
-                topics: ["Deepfakes", "Security Awareness"],
+                type: "Guide",
+                topic: "AI & Deepfakes",
                 title: "Deepfake-Proofing Your Workforce",
-                excerpt: "This guide is your ultimate resource for evolving your security awareness training program to tackle deepfake threats.",
+                excerpt: "Your ultimate resource for evolving your security awareness training program to tackle deepfake threats.",
                 date: "Jan 8, 2025",
-                featured: true
+                featured: true,
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop"
             },
             {
                 id: 2,
-                type: "Whitepaper",
-                topics: ["Phishing", "AI"],
-                title: "2024 Phishing Trends Report",
-                excerpt: "Analysis of the latest phishing techniques and how AI is changing the threat landscape.",
-                date: "Dec 15, 2024",
-                featured: false
+                type: "Video",
+                topic: "Security Awareness",
+                title: "Building a Security-First Culture",
+                excerpt: "Watch our expert panel discuss strategies for embedding security into your organization's DNA.",
+                date: "Jan 6, 2025",
+                duration: "32 min",
+                image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop"
             },
             {
                 id: 3,
-                type: "Whitepaper",
-                topics: ["AI", "Deepfakes"],
-                title: "AI Voice Cloning: Enterprise Defense Guide",
-                excerpt: "How to protect your organization from AI-powered voice cloning attacks.",
-                date: "Jan 5, 2025",
-                featured: false
+                type: "Blog",
+                topic: "Phishing",
+                title: "2024 Phishing Trends: What We Learned",
+                excerpt: "A deep dive into the latest phishing techniques and how AI is changing the threat landscape.",
+                date: "Jan 4, 2025",
+                readTime: "8 min read",
+                image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop"
             },
             {
                 id: 4,
-                type: "Whitepaper",
-                topics: ["Security Awareness"],
-                title: "Building a Security-First Culture",
-                excerpt: "A comprehensive framework for embedding security awareness into your organization's DNA.",
-                date: "Dec 28, 2024",
-                featured: false
+                type: "Event",
+                topic: "AI & Deepfakes",
+                title: "Webinar: Defending Against AI Voice Cloning",
+                excerpt: "Join us for a live session on protecting your organization from AI-powered voice cloning attacks.",
+                date: "Jan 15, 2025",
+                eventType: "Webinar",
+                image: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=600&h=400&fit=crop"
             },
             {
                 id: 5,
-                type: "Whitepaper",
-                topics: ["Phishing"],
-                title: "Spear Phishing Prevention Playbook",
-                excerpt: "Targeted strategies for defending against sophisticated spear phishing campaigns.",
-                date: "Dec 20, 2024",
-                featured: false
+                type: "Product Update",
+                topic: "Security Awareness",
+                title: "New: Personalized Training Paths",
+                excerpt: "Introducing AI-driven personalized learning journeys that adapt to each employee's skill level.",
+                date: "Jan 3, 2025",
+                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop"
             },
             {
                 id: 6,
-                type: "Whitepaper",
-                topics: ["AI", "Security Awareness"],
-                title: "The AI Security Training Revolution",
-                excerpt: "How artificial intelligence is transforming security awareness programs.",
+                type: "Guide",
+                topic: "Phishing",
+                title: "Spear Phishing Prevention Playbook",
+                excerpt: "Targeted strategies for defending against sophisticated spear phishing campaigns.",
+                date: "Dec 28, 2024",
+                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=400&fit=crop"
+            },
+            {
+                id: 7,
+                type: "Video",
+                topic: "Compliance",
+                title: "SOC 2 Compliance Training Overview",
+                excerpt: "Everything your team needs to know about SOC 2 compliance requirements.",
+                date: "Dec 20, 2024",
+                duration: "18 min",
+                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&h=400&fit=crop"
+            },
+            {
+                id: 8,
+                type: "Blog",
+                topic: "AI & Deepfakes",
+                title: "How AI is Revolutionizing Security Training",
+                excerpt: "How artificial intelligence is transforming security awareness programs for the better.",
+                date: "Dec 15, 2024",
+                readTime: "6 min read",
+                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop"
+            },
+            {
+                id: 9,
+                type: "Event",
+                topic: "Security Awareness",
+                title: "Security Summit 2025",
+                excerpt: "Our annual conference featuring industry leaders discussing the future of security awareness.",
+                date: "Feb 10, 2025",
+                eventType: "Conference",
+                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop"
+            },
+            {
+                id: 10,
+                type: "Product Update",
+                topic: "Phishing",
+                title: "Enhanced Phishing Simulations",
+                excerpt: "New templates and scenarios based on real-world attacks from Q4 2024.",
                 date: "Dec 10, 2024",
-                featured: false
+                image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop"
+            },
+            {
+                id: 11,
+                type: "Guide",
+                topic: "Compliance",
+                title: "GDPR Training Requirements Guide",
+                excerpt: "A comprehensive guide to meeting GDPR security awareness training obligations.",
+                date: "Dec 5, 2024",
+                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop"
+            },
+            {
+                id: 12,
+                type: "Blog",
+                topic: "Security Awareness",
+                title: "Measuring Training Effectiveness",
+                excerpt: "Key metrics and strategies for measuring the impact of your security awareness program.",
+                date: "Nov 28, 2024",
+                readTime: "10 min read",
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop"
             }
         ];
 
-        const BLOG_POSTS = [
-            {
-                id: 1,
-                title: "How to Protect Your Company from Deepfake Phishing Attacks",
-                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=126&h=126&fit=crop"
-            },
-            {
-                id: 2,
-                title: "Barrel Phishing: When Attackers Build Trust First",
-                image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=126&h=126&fit=crop"
-            },
-            {
-                id: 3,
-                title: "Deepfake Scams: The Next Frontier in Social Engineering",
-                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=126&h=126&fit=crop"
-            }
-        ];
-
-        const TOPICS = ["All", "Security awareness", "Phishing", "AI"];
-
-        // Top Banner Component
+        // Top Banner
         function TopBanner() {
             return (
                 <div className="bg-accent text-white py-2 px-6 text-center text-sm">
@@ -220,7 +269,7 @@
             );
         }
 
-        // Navigation Component
+        // Navigation
         function Nav() {
             return (
                 <nav className="sticky top-0 z-50 bg-white border-b border-border-light">
@@ -243,9 +292,8 @@
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                             </a>
                             <a href="#" className="text-primary text-sm hover:opacity-70 transition">Customers</a>
-                            <a href="#" className="text-primary text-sm hover:opacity-70 transition flex items-center gap-1">
+                            <a href="#" className="text-primary text-sm font-medium border-b-2 border-primary pb-0.5">
                                 Resources
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                             </a>
                             <a href="#" className="text-primary text-sm hover:opacity-70 transition">Pricing</a>
                         </div>
@@ -257,209 +305,289 @@
             );
         }
 
-        // Hero Section with Featured Whitepaper
+        // Hero with Featured Resource
         function Hero({ featuredResource }) {
+            const getBadgeClass = (type) => {
+                const classes = {
+                    'Guide': 'badge-guide',
+                    'Video': 'badge-video',
+                    'Blog': 'badge-blog',
+                    'Event': 'badge-event',
+                    'Product Update': 'badge-update'
+                };
+                return classes[type] || 'badge-guide';
+            };
+
             return (
                 <section className="bg-gradient-to-b from-transparent to-[#f5f5f5] px-[100px] py-[104px]">
                     <div className="max-w-[1240px] mx-auto">
                         {/* Header */}
-                        <div className="mb-16 max-w-[600px]">
-                            <h1 className="font-heading text-[56px] leading-[1.2] tracking-[-1.12px] text-primary mb-8">
-                                Whitepapers
+                        <div className="mb-16">
+                            <h1 className="font-heading text-[56px] leading-[1.2] tracking-[-1.12px] text-primary mb-6">
+                                Resources
                             </h1>
-                            <p className="text-base leading-[1.5] text-primary max-w-[426px]">
-                                Everything you need to train your workforce on deepfake attacks.
+                            <p className="text-lg leading-[1.5] text-secondary max-w-[600px]">
+                                Guides, videos, blogs, and product updates to help you build a security-aware workforce.
                             </p>
                         </div>
 
-                        {/* Featured Article Card */}
-                        <a href="#" className="block bg-white rounded-lg border border-border-light p-4 hover:shadow-lg transition">
-                            <div className="flex gap-16 items-center">
-                                {/* Whitepaper Cover Image */}
-                                <div className="whitepaper-gradient rounded-md h-[361px] w-[651px] flex-shrink-0 flex items-center justify-center relative overflow-hidden">
-                                    <div className="relative flex items-center justify-center">
-                                        {/* Background covers (tilted) */}
-                                        <div className="absolute w-[181px] h-[250px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform -rotate-2 -translate-x-6 shadow-md"></div>
-                                        <div className="absolute w-[181px] h-[250px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform rotate-2 translate-x-6 shadow-md"></div>
-                                        {/* Main cover */}
-                                        <div className="relative w-[191px] h-[271px] bg-white border-2 border-white rounded-lg shadow-lg overflow-hidden z-10">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-200"></div>
-                                            <div className="absolute inset-0 flex flex-col p-4">
-                                                <div className="text-xs text-primary/60 mb-2">WHITEPAPER</div>
-                                                <div className="font-heading text-sm text-primary leading-tight">
-                                                    Deepfake-Proofing Your Workforce
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        {/* Featured Resource */}
+                        <a href="#" className="block bg-white rounded-lg border border-border-light overflow-hidden hover:shadow-lg transition group">
+                            <div className="flex">
+                                {/* Image */}
+                                <div className="resource-gradient w-[55%] h-[400px] flex-shrink-0 relative overflow-hidden">
+                                    <img
+                                        src={featuredResource.image}
+                                        alt={featuredResource.title}
+                                        className="w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition duration-500"
+                                    />
                                 </div>
 
                                 {/* Content */}
-                                <div className="py-2 flex-1">
-                                    <div className="mb-4">
-                                        <span className="inline-flex items-center justify-center h-6 px-2 border border-border-divider rounded-xs text-sm font-medium text-primary">
+                                <div className="flex-1 p-10 flex flex-col justify-center">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <span className="inline-flex items-center justify-center h-6 px-2 border border-border-divider rounded-xs text-xs font-medium text-primary">
                                             Featured
                                         </span>
+                                        <span className={`inline-flex items-center h-6 px-2 rounded-xs text-xs font-medium ${getBadgeClass(featuredResource.type)}`}>
+                                            {featuredResource.type}
+                                        </span>
                                     </div>
-                                    <h2 className="font-heading text-[40px] leading-[1.2] tracking-[-0.8px] text-primary mb-4">
+                                    <h2 className="font-heading text-[36px] leading-[1.2] tracking-[-0.72px] text-primary mb-4">
                                         {featuredResource.title}
                                     </h2>
-                                    <p className="text-base leading-[1.5] text-[#101804]">
+                                    <p className="text-base leading-[1.6] text-secondary mb-6">
                                         {featuredResource.excerpt}
                                     </p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </section>
-            );
-        }
-
-        // Articles Section
-        function ArticlesSection({ resources, activeTopic, setActiveTopic, searchQuery, setSearchQuery }) {
-            return (
-                <section className="px-[100px] py-[104px]">
-                    <div className="max-w-[1240px] mx-auto">
-                        {/* Header with Search */}
-                        <div className="flex items-center justify-between mb-8">
-                            <h2 className="font-heading text-[44px] leading-[1.2] tracking-[-0.88px] text-primary">
-                                All whitepapers
-                            </h2>
-                            <div className="relative w-[320px]">
-                                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                                <input
-                                    type="text"
-                                    placeholder="Search"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-white border border-border-divider rounded-sm pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-primary transition placeholder:text-tertiary"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Simple Filter Pills - matching Figma exactly */}
-                        <div className="flex items-center gap-2 mb-10">
-                            {TOPICS.map(topic => (
-                                <button
-                                    key={topic}
-                                    onClick={() => setActiveTopic(topic)}
-                                    className={`filter-btn h-8 px-3 rounded-sm text-sm font-medium border transition whitespace-nowrap ${
-                                        activeTopic === topic
-                                            ? 'active border-primary bg-white text-primary'
-                                            : 'border-border-divider bg-white text-primary hover:bg-gray-50'
-                                    }`}
-                                >
-                                    {topic}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Content Grid */}
-                        <div className="flex gap-20">
-                            {/* Whitepapers Grid */}
-                            <div className="flex-1">
-                                <div className="grid grid-cols-2 gap-x-10 gap-y-16">
-                                    {resources.map((resource, index) => (
-                                        <WhitepaperCard key={resource.id} resource={resource} index={index} />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* From the Blog Sidebar */}
-                            <div className="w-[346px] flex-shrink-0">
-                                <p className="text-xs font-medium text-tertiary uppercase tracking-[0.36px] mb-4">
-                                    from the blog
-                                </p>
-                                <div className="flex flex-col gap-3">
-                                    {BLOG_POSTS.map(post => (
-                                        <BlogCard key={post.id} post={post} />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            );
-        }
-
-        // Whitepaper Card
-        function WhitepaperCard({ resource, index }) {
-            return (
-                <a
-                    href="#"
-                    className="resource-card block animate-in"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                    {/* Cover Image */}
-                    <div className="whitepaper-gradient rounded-lg h-[214px] mb-6 flex items-center justify-center relative overflow-hidden">
-                        <div className="relative flex items-center justify-center">
-                            {/* Background covers (tilted) */}
-                            <div className="absolute w-[106px] h-[147px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform -rotate-2 -translate-x-3 shadow-md"></div>
-                            <div className="absolute w-[106px] h-[147px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform rotate-2 translate-x-3 shadow-md"></div>
-                            {/* Main cover */}
-                            <div className="relative w-[112px] h-[159px] bg-white border-2 border-white rounded-lg shadow-lg overflow-hidden z-10">
-                                <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-200"></div>
-                                <div className="absolute inset-0 flex flex-col p-2">
-                                    <div className="text-[8px] text-primary/60 mb-1">WHITEPAPER</div>
-                                    <div className="font-heading text-[9px] text-primary leading-tight">
-                                        {resource.title}
+                                    <div className="flex items-center gap-4 text-sm text-tertiary">
+                                        <span>{featuredResource.date}</span>
+                                        <span>•</span>
+                                        <span>{featuredResource.topic}</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-
-                    {/* Title */}
-                    <h3 className="font-heading text-[20px] leading-[1.4] tracking-[-0.4px] text-primary">
-                        {resource.title}
-                    </h3>
-                </a>
+                </section>
             );
         }
 
-        // Blog Card
-        function BlogCard({ post }) {
+        // Filter Bar
+        function FilterBar({ activeType, setActiveType, activeTopic, setActiveTopic, searchQuery, setSearchQuery, resourceCount }) {
             return (
-                <div className="flex gap-4 items-center h-[126px]">
-                    <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-[126px] h-[126px] rounded-md object-cover flex-shrink-0"
-                    />
-                    <div className="py-2 flex-1">
-                        <p className="font-medium text-base leading-[1.5] text-primary mb-3">
-                            {post.title}
-                        </p>
-                        <a href="#" className="link-btn inline-flex items-center gap-1.5 text-sm font-medium text-primary transition">
-                            Read more
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </a>
+                <div className="bg-white border-b border-border-light sticky top-[65px] z-40">
+                    <div className="max-w-[1240px] mx-auto px-[100px] py-4">
+                        <div className="flex items-center justify-between gap-6">
+                            {/* Left: Filters */}
+                            <div className="flex items-center gap-6">
+                                {/* Type Filter */}
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-medium text-tertiary uppercase tracking-wide">Type:</span>
+                                    <div className="flex items-center gap-1.5">
+                                        {TYPES.map(type => (
+                                            <button
+                                                key={type}
+                                                onClick={() => setActiveType(type)}
+                                                className={`filter-btn h-8 px-3 rounded-sm text-sm font-medium border transition whitespace-nowrap ${
+                                                    activeType === type
+                                                        ? 'active'
+                                                        : 'border-border-divider bg-white text-primary'
+                                                }`}
+                                            >
+                                                {type === "All Types" ? "All" : type}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Divider */}
+                                <div className="w-px h-6 bg-border-divider"></div>
+
+                                {/* Topic Filter */}
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-medium text-tertiary uppercase tracking-wide">Topic:</span>
+                                    <select
+                                        value={activeTopic}
+                                        onChange={(e) => setActiveTopic(e.target.value)}
+                                        className="h-8 px-3 pr-8 rounded-sm text-sm font-medium border border-border-divider bg-white text-primary focus:outline-none focus:border-primary cursor-pointer appearance-none"
+                                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23262626' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
+                                    >
+                                        {TOPICS.map(topic => (
+                                            <option key={topic} value={topic}>{topic}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Right: Search + Count */}
+                            <div className="flex items-center gap-4">
+                                <span className="text-sm text-tertiary">{resourceCount} resources</span>
+                                <div className="relative w-[240px]">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        placeholder="Search resources..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full bg-white border border-border-divider rounded-sm pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-primary transition placeholder:text-tertiary"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
         }
 
-        // Newsletter Section
+        // Resource Card
+        function ResourceCard({ resource, index }) {
+            const getBadgeClass = (type) => {
+                const classes = {
+                    'Guide': 'badge-guide',
+                    'Video': 'badge-video',
+                    'Blog': 'badge-blog',
+                    'Event': 'badge-event',
+                    'Product Update': 'badge-update'
+                };
+                return classes[type] || 'badge-guide';
+            };
+
+            const getIcon = (type) => {
+                const icons = {
+                    'Guide': (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    ),
+                    'Video': (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    ),
+                    'Blog': (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                        </svg>
+                    ),
+                    'Event': (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    ),
+                    'Product Update': (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    )
+                };
+                return icons[type] || icons['Guide'];
+            };
+
+            const getMeta = (resource) => {
+                if (resource.duration) return resource.duration;
+                if (resource.readTime) return resource.readTime;
+                if (resource.eventType) return resource.eventType;
+                return null;
+            };
+
+            return (
+                <a
+                    href="#"
+                    className="resource-card block bg-white rounded-lg border border-border-light overflow-hidden animate-in"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                    {/* Image */}
+                    <div className="relative h-[180px] overflow-hidden bg-gray-100">
+                        <img
+                            src={resource.image}
+                            alt={resource.title}
+                            className="w-full h-full object-cover"
+                        />
+                        {resource.type === 'Video' && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-primary ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-5">
+                        <div className="flex items-center gap-2 mb-3">
+                            <span className={`inline-flex items-center gap-1.5 h-6 px-2 rounded-xs text-xs font-medium ${getBadgeClass(resource.type)}`}>
+                                {getIcon(resource.type)}
+                                {resource.type}
+                            </span>
+                        </div>
+                        <h3 className="font-heading text-lg leading-[1.3] tracking-[-0.36px] text-primary mb-2 line-clamp-2">
+                            {resource.title}
+                        </h3>
+                        <p className="text-sm text-secondary leading-[1.5] mb-4 line-clamp-2">
+                            {resource.excerpt}
+                        </p>
+                        <div className="flex items-center gap-3 text-xs text-tertiary">
+                            <span>{resource.date}</span>
+                            {getMeta(resource) && (
+                                <>
+                                    <span>•</span>
+                                    <span>{getMeta(resource)}</span>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </a>
+            );
+        }
+
+        // Resources Grid
+        function ResourcesGrid({ resources }) {
+            if (resources.length === 0) {
+                return (
+                    <div className="text-center py-20">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                            <svg className="w-8 h-8 text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <h3 className="font-heading text-xl text-primary mb-2">No resources found</h3>
+                        <p className="text-secondary">Try adjusting your filters or search query.</p>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="grid grid-cols-3 gap-6">
+                    {resources.map((resource, index) => (
+                        <ResourceCard key={resource.id} resource={resource} index={index} />
+                    ))}
+                </div>
+            );
+        }
+
+        // Newsletter
         function Newsletter() {
             return (
-                <section className="px-[100px] py-14">
+                <section className="px-[100px] py-14 bg-[#f5f5f5]">
                     <div className="max-w-[1240px] mx-auto">
                         <div className="bg-white border border-border-light rounded-lg overflow-hidden">
-                            <div className="flex items-center justify-between px-[180px] py-7">
-                                <p className="text-base text-primary">
-                                    Sign up to newsletter and never miss new stories
-                                </p>
-                                <div className="flex gap-1.5">
+                            <div className="flex items-center justify-between px-12 py-8">
+                                <div>
+                                    <h3 className="font-heading text-xl text-primary mb-1">Stay up to date</h3>
+                                    <p className="text-sm text-secondary">Get the latest security insights delivered to your inbox.</p>
+                                </div>
+                                <div className="flex gap-2">
                                     <input
                                         type="email"
                                         placeholder="Your email"
-                                        className="w-[230px] border border-border-divider rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition placeholder:text-tertiary"
+                                        className="w-[260px] border border-border-divider rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition placeholder:text-tertiary"
                                     />
-                                    <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-sm text-sm font-medium transition">
+                                    <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-sm text-sm font-medium transition">
                                         Subscribe
                                     </button>
                                 </div>
@@ -475,7 +603,7 @@
             return (
                 <footer className="bg-white border-t border-border-light px-[100px] py-16">
                     <div className="max-w-[1240px] mx-auto">
-                        {/* Newsletter Bar */}
+                        {/* CTA Bar */}
                         <div className="bg-primary rounded-lg p-8 mb-16">
                             <div className="flex items-center justify-between">
                                 <p className="text-white text-lg">
@@ -496,7 +624,6 @@
 
                         {/* Footer Links */}
                         <div className="grid grid-cols-6 gap-8 mb-12">
-                            {/* Logo */}
                             <div className="col-span-1">
                                 <div className="flex items-center gap-2 mb-4">
                                     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -510,25 +637,23 @@
                                     302 Broadway, 9Fl,<br/>
                                     New York, NY 10001
                                 </p>
-                                <a href="mailto:hello@yoursite.com" className="text-sm text-secondary hover:text-primary transition">
+                                <a href="mailto:hello@adaptivesecurity.com" className="text-sm text-secondary hover:text-primary transition">
                                     hello@adaptivesecurity.com
                                 </a>
                             </div>
 
-                            {/* Products */}
                             <div>
-                                <h4 className="font-medium text-sm text-primary mb-4">PRODUCTS</h4>
+                                <h4 className="font-medium text-xs text-tertiary uppercase tracking-wide mb-4">Products</h4>
                                 <ul className="space-y-3 text-sm text-secondary">
                                     <li><a href="#" className="hover:text-primary transition">Security Awareness Training</a></li>
-                                    <li><a href="#" className="hover:text-primary transition">AI & Deepfake Threat Training</a></li>
-                                    <li><a href="#" className="hover:text-primary transition">Compliance & Policy Training</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">AI & Deepfake Training</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Compliance Training</a></li>
                                     <li><a href="#" className="hover:text-primary transition">Custom Video Content</a></li>
                                 </ul>
                             </div>
 
-                            {/* Solutions */}
                             <div>
-                                <h4 className="font-medium text-sm text-primary mb-4">SOLUTIONS</h4>
+                                <h4 className="font-medium text-xs text-tertiary uppercase tracking-wide mb-4">Solutions</h4>
                                 <ul className="space-y-3 text-sm text-secondary">
                                     <li><a href="#" className="hover:text-primary transition">Enterprise</a></li>
                                     <li><a href="#" className="hover:text-primary transition">Mid-Market</a></li>
@@ -536,20 +661,18 @@
                                 </ul>
                             </div>
 
-                            {/* Resources */}
                             <div>
-                                <h4 className="font-medium text-sm text-primary mb-4">RESOURCES</h4>
+                                <h4 className="font-medium text-xs text-tertiary uppercase tracking-wide mb-4">Resources</h4>
                                 <ul className="space-y-3 text-sm text-secondary">
                                     <li><a href="#" className="hover:text-primary transition">Blog</a></li>
-                                    <li><a href="#" className="hover:text-primary transition">Whitepapers</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Guides</a></li>
                                     <li><a href="#" className="hover:text-primary transition">Press</a></li>
                                     <li><a href="#" className="hover:text-primary transition">Glossary</a></li>
                                 </ul>
                             </div>
 
-                            {/* Company */}
                             <div>
-                                <h4 className="font-medium text-sm text-primary mb-4">COMPANY</h4>
+                                <h4 className="font-medium text-xs text-tertiary uppercase tracking-wide mb-4">Company</h4>
                                 <ul className="space-y-3 text-sm text-secondary">
                                     <li><a href="#" className="hover:text-primary transition">About</a></li>
                                     <li><a href="#" className="hover:text-primary transition">Careers</a></li>
@@ -558,9 +681,8 @@
                                 </ul>
                             </div>
 
-                            {/* Support */}
                             <div>
-                                <h4 className="font-medium text-sm text-primary mb-4">SUPPORT</h4>
+                                <h4 className="font-medium text-xs text-tertiary uppercase tracking-wide mb-4">Support</h4>
                                 <ul className="space-y-3 text-sm text-secondary">
                                     <li><a href="#" className="hover:text-primary transition">Security</a></li>
                                     <li><a href="#" className="hover:text-primary transition">Trust Center</a></li>
@@ -588,7 +710,8 @@
 
         // Main App
         function App() {
-            const [activeTopic, setActiveTopic] = useState("All");
+            const [activeType, setActiveType] = useState("All Types");
+            const [activeTopic, setActiveTopic] = useState("All Topics");
             const [searchQuery, setSearchQuery] = useState("");
 
             const featuredResource = RESOURCES.find(r => r.featured);
@@ -598,16 +721,14 @@
                     // Don't show featured in the grid
                     if (resource.featured) return false;
 
+                    // Type filter
+                    if (activeType !== "All Types" && resource.type !== activeType) {
+                        return false;
+                    }
+
                     // Topic filter
-                    if (activeTopic !== "All") {
-                        const topicMap = {
-                            "Security awareness": "Security Awareness",
-                            "Phishing": "Phishing",
-                            "AI": "AI"
-                        };
-                        if (!resource.topics.includes(topicMap[activeTopic])) {
-                            return false;
-                        }
+                    if (activeTopic !== "All Topics" && resource.topic !== activeTopic) {
+                        return false;
                     }
 
                     // Search filter
@@ -616,26 +737,34 @@
                         return (
                             resource.title.toLowerCase().includes(query) ||
                             resource.excerpt.toLowerCase().includes(query) ||
-                            resource.topics.some(t => t.toLowerCase().includes(query))
+                            resource.type.toLowerCase().includes(query) ||
+                            resource.topic.toLowerCase().includes(query)
                         );
                     }
 
                     return true;
                 });
-            }, [activeTopic, searchQuery]);
+            }, [activeType, activeTopic, searchQuery]);
 
             return (
                 <div className="min-h-screen bg-white">
                     <TopBanner />
                     <Nav />
                     <Hero featuredResource={featuredResource} />
-                    <ArticlesSection
-                        resources={filteredResources}
+                    <FilterBar
+                        activeType={activeType}
+                        setActiveType={setActiveType}
                         activeTopic={activeTopic}
                         setActiveTopic={setActiveTopic}
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
+                        resourceCount={filteredResources.length}
                     />
+                    <section className="px-[100px] py-12 bg-[#f5f5f5] min-h-[600px]">
+                        <div className="max-w-[1240px] mx-auto">
+                            <ResourcesGrid resources={filteredResources} />
+                        </div>
+                    </section>
                     <Newsletter />
                     <Footer />
                 </div>
