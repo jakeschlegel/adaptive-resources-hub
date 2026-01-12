@@ -13,27 +13,46 @@
             theme: {
                 extend: {
                     colors: {
-                        cream: {
-                            50: '#FFFDFB',
-                            100: '#FFF9F5',
-                            200: '#FFF5ED',
-                            300: '#FFEEE0',
-                            400: '#FFE4D0',
+                        primary: '#262626',
+                        secondary: '#3b3b3b',
+                        tertiary: 'rgba(38,38,38,0.6)',
+                        border: {
+                            light: 'rgba(38,38,38,0.08)',
+                            medium: 'rgba(38,38,38,0.12)',
+                            divider: '#d8d8d8',
+                            strong: '#262626'
                         },
                         accent: {
                             DEFAULT: '#EA580C',
                             light: '#F97316',
-                            dark: '#C2410C',
                         }
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
+                        heading: ['FK Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+                    },
+                    spacing: {
+                        'section': '100px',
+                        'section-y': '104px',
+                    },
+                    borderRadius: {
+                        'xs': '4px',
+                        'sm': '6px',
+                        'md': '8px',
+                        'lg': '12px',
                     }
                 }
             }
         }
     </script>
     <style>
+        @font-face {
+            font-family: 'FK Grotesk';
+            src: local('FK Grotesk'), local('FKGrotesk-Regular');
+            font-weight: 400;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -42,9 +61,14 @@
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: linear-gradient(180deg, #FFF9F5 0%, #FFEEE0 50%, #FFF5ED 100%);
-            color: #1a1a1a;
+            color: #262626;
             min-height: 100vh;
+        }
+
+        /* Heading font fallback */
+        .font-heading {
+            font-family: 'FK Grotesk', 'Inter', system-ui, sans-serif;
+            letter-spacing: -0.02em;
         }
 
         /* Card hover effects */
@@ -53,13 +77,9 @@
         }
         .resource-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-        }
-        .resource-card:hover .card-image {
-            transform: scale(1.05);
-        }
-        .card-image {
-            transition: transform 0.4s ease;
+            box-shadow: 0 22px 27px -11px rgba(0,0,0,0.02),
+                        0 18px 18px -11px rgba(0,0,0,0.03),
+                        0 9px 13px -7px rgba(0,0,0,0.03);
         }
 
         /* Filter button styles */
@@ -67,11 +87,20 @@
             transition: all 0.2s ease;
         }
         .filter-btn:hover:not(.active) {
-            background: #f3f4f6;
+            background: #f5f5f5;
         }
         .filter-btn.active {
-            background: #1a1a1a;
-            color: white;
+            border-color: #262626;
+        }
+
+        /* Whitepaper cover gradient */
+        .whitepaper-gradient {
+            background: linear-gradient(90deg, #feefd4 0%, #ffd886 49.52%, #ffc59d 100%);
+        }
+
+        /* Link button hover */
+        .link-btn:hover {
+            opacity: 0.7;
         }
 
         /* Animate in */
@@ -104,179 +133,88 @@
         const RESOURCES = [
             {
                 id: 1,
-                type: "Guide",
+                type: "Whitepaper",
                 topics: ["Deepfakes", "Security Awareness"],
                 title: "Deepfake-Proofing Your Workforce",
-                excerpt: "A comprehensive guide to training employees to recognize and respond to deepfake threats in the workplace.",
-                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop",
+                excerpt: "This guide is your ultimate resource for evolving your security awareness training program to tackle deepfake threats.",
                 date: "Jan 8, 2025",
-                readTime: "12 min read",
                 featured: true
             },
             {
                 id: 2,
-                type: "Guide",
+                type: "Whitepaper",
                 topics: ["Phishing", "AI"],
                 title: "2024 Phishing Trends Report",
                 excerpt: "Analysis of the latest phishing techniques and how AI is changing the threat landscape.",
-                image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop",
                 date: "Dec 15, 2024",
-                readTime: "8 min read",
-                featured: true
+                featured: false
             },
             {
                 id: 3,
-                type: "Product Update",
+                type: "Whitepaper",
                 topics: ["AI", "Deepfakes"],
-                title: "New Release: Custom AI Deepfake Personas",
-                excerpt: "Create hyper-realistic training scenarios with our new custom deepfake persona generator.",
-                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop",
+                title: "AI Voice Cloning: Enterprise Defense Guide",
+                excerpt: "How to protect your organization from AI-powered voice cloning attacks.",
                 date: "Jan 5, 2025",
-                readTime: "4 min read",
-                featured: true
+                featured: false
             },
             {
                 id: 4,
-                type: "Video",
-                topics: ["AI", "Security Awareness"],
-                title: "How Voice Cloning Attacks Work",
-                excerpt: "Watch how attackers use AI to clone voices and deceive employees into transferring funds.",
-                image: "https://images.unsplash.com/photo-1589254065878-42c9da997008?w=600&h=400&fit=crop",
+                type: "Whitepaper",
+                topics: ["Security Awareness"],
+                title: "Building a Security-First Culture",
+                excerpt: "A comprehensive framework for embedding security awareness into your organization's DNA.",
                 date: "Dec 28, 2024",
-                readTime: "18 min watch"
+                featured: false
             },
             {
                 id: 5,
-                type: "Blog",
-                topics: ["Security Awareness"],
-                title: "Why Traditional Security Awareness Training Fails",
-                excerpt: "The science behind why click-through training doesn't work and what to do instead.",
-                image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop",
+                type: "Whitepaper",
+                topics: ["Phishing"],
+                title: "Spear Phishing Prevention Playbook",
+                excerpt: "Targeted strategies for defending against sophisticated spear phishing campaigns.",
                 date: "Dec 20, 2024",
-                readTime: "6 min read"
+                featured: false
             },
             {
                 id: 6,
-                type: "Event",
-                topics: ["Security Awareness", "AI"],
-                title: "Webinar: 2025 Threat Landscape Preview",
-                excerpt: "Join our security experts for a deep dive into emerging threats and defense strategies.",
-                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop",
-                date: "Jan 15, 2025",
-                readTime: "Live Event"
-            },
-            {
-                id: 7,
-                type: "Video",
-                topics: ["Phishing"],
-                title: "Customer Story: How Acme Corp Reduced Phishing Risk",
-                excerpt: "Learn how Acme Corp achieved a 94% reduction in successful phishing attempts.",
-                image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=400&fit=crop",
+                type: "Whitepaper",
+                topics: ["AI", "Security Awareness"],
+                title: "The AI Security Training Revolution",
+                excerpt: "How artificial intelligence is transforming security awareness programs.",
                 date: "Dec 10, 2024",
-                readTime: "12 min watch"
-            },
-            {
-                id: 8,
-                type: "Blog",
-                topics: ["AI", "Phishing"],
-                title: "The Rise of AI-Powered Social Engineering",
-                excerpt: "How attackers are leveraging ChatGPT and other AI tools to craft convincing phishing attacks.",
-                image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&h=400&fit=crop",
-                date: "Dec 5, 2024",
-                readTime: "7 min read"
-            },
-            {
-                id: 9,
-                type: "Product Update",
-                topics: ["Compliance"],
-                title: "Q4 2024 Platform Updates",
-                excerpt: "New compliance dashboards, enhanced reporting, and integrations with major SIEM platforms.",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
-                date: "Dec 1, 2024",
-                readTime: "5 min read"
-            },
-            {
-                id: 10,
-                type: "Event",
-                topics: ["Security Awareness"],
-                title: "RSA Conference 2024 Recap",
-                excerpt: "Key takeaways and insights from this year's biggest security conference.",
-                image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600&h=400&fit=crop",
-                date: "Nov 20, 2024",
-                readTime: "10 min read"
-            },
-            {
-                id: 11,
-                type: "Guide",
-                topics: ["Compliance", "Security Awareness"],
-                title: "NIST Compliance Checklist for Security Training",
-                excerpt: "Ensure your security awareness program meets NIST framework requirements.",
-                image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop",
-                date: "Nov 15, 2024",
-                readTime: "15 min read"
-            },
-            {
-                id: 12,
-                type: "Blog",
-                topics: ["Deepfakes"],
-                title: "Detecting Deepfakes: A Technical Overview",
-                excerpt: "Understanding the technology behind deepfake detection and what works today.",
-                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=400&fit=crop",
-                date: "Nov 8, 2024",
-                readTime: "9 min read"
-            },
-            {
-                id: 13,
-                type: "Video",
-                topics: ["AI", "Deepfakes"],
-                title: "Demo: Real-time Deepfake Detection",
-                excerpt: "See our AI-powered deepfake detection system identify manipulated video in real-time.",
-                image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=400&fit=crop",
-                date: "Nov 1, 2024",
-                readTime: "8 min watch"
-            },
-            {
-                id: 14,
-                type: "Product Update",
-                topics: ["AI"],
-                title: "Introducing AI Risk Scoring",
-                excerpt: "New machine learning models to predict which employees are most vulnerable to attacks.",
-                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
-                date: "Oct 25, 2024",
-                readTime: "6 min read"
-            },
-            {
-                id: 15,
-                type: "Guide",
-                topics: ["Phishing", "Security Awareness"],
-                title: "Building a Phishing-Resistant Culture",
-                excerpt: "Step-by-step guide to creating a security-first mindset across your organization.",
-                image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
-                date: "Oct 18, 2024",
-                readTime: "14 min read"
+                featured: false
             }
         ];
 
-        const TOPICS = ["All", "AI", "Phishing", "Security Awareness", "Deepfakes", "Compliance"];
-        const TYPES = ["All", "Guides", "Product Updates", "Videos", "Blogs", "Events"];
+        const BLOG_POSTS = [
+            {
+                id: 1,
+                title: "How to Protect Your Company from Deepfake Phishing Attacks",
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=126&h=126&fit=crop"
+            },
+            {
+                id: 2,
+                title: "Barrel Phishing: When Attackers Build Trust First",
+                image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=126&h=126&fit=crop"
+            },
+            {
+                id: 3,
+                title: "Deepfake Scams: The Next Frontier in Social Engineering",
+                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=126&h=126&fit=crop"
+            }
+        ];
 
-        // Type badge colors - light mode friendly
-        const TYPE_COLORS = {
-            "Guide": "bg-blue-100 text-blue-700",
-            "Product Update": "bg-purple-100 text-purple-700",
-            "Video": "bg-red-100 text-red-700",
-            "Blog": "bg-green-100 text-green-700",
-            "Event": "bg-amber-100 text-amber-700"
-        };
+        const TOPICS = ["All", "Security awareness", "Phishing", "AI"];
 
         // Top Banner Component
         function TopBanner() {
             return (
-                <div className="bg-accent text-white py-2.5 px-6 text-center text-sm">
+                <div className="bg-accent text-white py-2 px-6 text-center text-sm">
                     <span className="inline-flex items-center gap-2">
-                        <span className="bg-white/20 px-2 py-0.5 rounded text-xs font-semibold">New</span>
-                        <span>Adaptive Security raises $43M Series A to combat AI-powered attacks</span>
-                        <a href="#" className="underline hover:no-underline ml-1 font-medium">Read more</a>
+                        <span className="bg-white/20 px-2 py-0.5 rounded text-xs font-medium">New Funding</span>
+                        <span>We raised a $43M Series A from A16Z and OpenAI</span>
+                        <a href="#" className="underline hover:no-underline ml-1">read more</a>
                     </span>
                 </div>
             );
@@ -285,23 +223,33 @@
         // Navigation Component
         function Nav() {
             return (
-                <nav className="sticky top-0 z-50 bg-white border-b border-gray-100">
-                    <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <nav className="sticky top-0 z-50 bg-white border-b border-border-light">
+                    <div className="max-w-[1440px] mx-auto px-[100px] py-4 flex items-center justify-between">
                         <a href="/" className="flex items-center gap-2">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="32" height="32" rx="8" fill="#EA580C"/>
+                            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="32" height="32" rx="6" fill="#262626"/>
                                 <path d="M10 18.5V13.5C10 12.1193 11.1193 11 12.5 11H19.5C20.8807 11 22 12.1193 22 13.5V18.5C22 19.8807 20.8807 21 19.5 21H12.5C11.1193 21 10 19.8807 10 18.5Z" stroke="white" strokeWidth="2"/>
                                 <rect x="14" y="14" width="4" height="4" rx="1" fill="white"/>
                             </svg>
-                            <span className="font-semibold text-lg text-gray-900">Adaptive Security</span>
+                            <span className="font-medium text-primary">Adaptive</span>
                         </a>
                         <div className="hidden md:flex items-center gap-8">
-                            <a href="#" className="text-gray-600 hover:text-gray-900 transition">Products</a>
-                            <a href="#" className="text-gray-600 hover:text-gray-900 transition">Solutions</a>
-                            <a href="#" className="text-gray-900 font-medium">Resources</a>
-                            <a href="#" className="text-gray-600 hover:text-gray-900 transition">Pricing</a>
+                            <a href="#" className="text-primary text-sm hover:opacity-70 transition flex items-center gap-1">
+                                Products
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            </a>
+                            <a href="#" className="text-primary text-sm hover:opacity-70 transition flex items-center gap-1">
+                                Solutions
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            </a>
+                            <a href="#" className="text-primary text-sm hover:opacity-70 transition">Customers</a>
+                            <a href="#" className="text-primary text-sm hover:opacity-70 transition flex items-center gap-1">
+                                Resources
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            </a>
+                            <a href="#" className="text-primary text-sm hover:opacity-70 transition">Pricing</a>
                         </div>
-                        <a href="#" className="bg-gray-900 hover:bg-gray-800 transition text-white px-5 py-2.5 rounded-lg font-medium text-sm">
+                        <a href="#" className="bg-primary hover:bg-primary/90 transition text-white px-4 py-2 rounded-sm text-sm font-medium">
                             Get demo
                         </a>
                     </div>
@@ -309,152 +257,126 @@
             );
         }
 
-        // Hero Section
-        function Hero() {
+        // Hero Section with Featured Whitepaper
+        function Hero({ featuredResource }) {
             return (
-                <section className="pt-16 pb-12 px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="max-w-2xl">
-                            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-gray-900">
-                                Resources
+                <section className="bg-gradient-to-b from-transparent to-[#f5f5f5] px-[100px] py-[104px]">
+                    <div className="max-w-[1240px] mx-auto">
+                        {/* Header */}
+                        <div className="mb-16 max-w-[600px]">
+                            <h1 className="font-heading text-[56px] leading-[1.2] tracking-[-1.12px] text-primary mb-8">
+                                Whitepapers
                             </h1>
-                            <p className="text-xl text-gray-600 leading-relaxed">
-                                Guides, reports, and insights to help you build a security-aware workforce and defend against AI-powered threats.
+                            <p className="text-base leading-[1.5] text-primary max-w-[426px]">
+                                Everything you need to train your workforce on deepfake attacks.
                             </p>
                         </div>
-                    </div>
-                </section>
-            );
-        }
 
-        // Featured Resources - Matching the screenshot layout
-        function FeaturedResources({ resources }) {
-            const featured = resources.filter(r => r.featured).slice(0, 3);
-            const mainFeatured = featured[0];
-            const sideFeatured = featured.slice(1, 3);
-
-            return (
-                <section className="pb-12 px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6">Featured</h2>
-                        <div className="grid lg:grid-cols-3 gap-6">
-                            {/* Main Featured Card */}
-                            <a href="#" className="lg:col-span-2 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition group">
-                                <div className="aspect-[16/9] overflow-hidden">
-                                    <img
-                                        src={mainFeatured.image}
-                                        alt={mainFeatured.title}
-                                        className="w-full h-full object-cover card-image"
-                                    />
+                        {/* Featured Article Card */}
+                        <a href="#" className="block bg-white rounded-lg border border-border-light p-4 hover:shadow-lg transition">
+                            <div className="flex gap-16 items-center">
+                                {/* Whitepaper Cover Image */}
+                                <div className="whitepaper-gradient rounded-md h-[361px] w-[651px] flex-shrink-0 flex items-center justify-center relative overflow-hidden">
+                                    <div className="relative flex items-center justify-center">
+                                        {/* Background covers (tilted) */}
+                                        <div className="absolute w-[181px] h-[250px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform -rotate-2 -translate-x-6 shadow-md"></div>
+                                        <div className="absolute w-[181px] h-[250px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform rotate-2 translate-x-6 shadow-md"></div>
+                                        {/* Main cover */}
+                                        <div className="relative w-[191px] h-[271px] bg-white border-2 border-white rounded-lg shadow-lg overflow-hidden z-10">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-200"></div>
+                                            <div className="absolute inset-0 flex flex-col p-4">
+                                                <div className="text-xs text-primary/60 mb-2">WHITEPAPER</div>
+                                                <div className="font-heading text-sm text-primary leading-tight">
+                                                    Deepfake-Proofing Your Workforce
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="p-6">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <span className="bg-accent/10 text-accent px-3 py-1 rounded-full text-xs font-semibold">
+
+                                {/* Content */}
+                                <div className="py-2 flex-1">
+                                    <div className="mb-4">
+                                        <span className="inline-flex items-center justify-center h-6 px-2 border border-border-divider rounded-xs text-sm font-medium text-primary">
                                             Featured
                                         </span>
-                                        <span className={`px-2.5 py-1 rounded-md text-xs font-medium ${TYPE_COLORS[mainFeatured.type]}`}>
-                                            {mainFeatured.type}
-                                        </span>
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-3 text-gray-900 group-hover:text-accent transition">
-                                        {mainFeatured.title}
-                                    </h3>
-                                    <p className="text-gray-600 mb-4">
-                                        {mainFeatured.excerpt}
+                                    <h2 className="font-heading text-[40px] leading-[1.2] tracking-[-0.8px] text-primary mb-4">
+                                        {featuredResource.title}
+                                    </h2>
+                                    <p className="text-base leading-[1.5] text-[#101804]">
+                                        {featuredResource.excerpt}
                                     </p>
-                                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                                        <span>{mainFeatured.date}</span>
-                                        <span>{mainFeatured.readTime}</span>
-                                    </div>
                                 </div>
-                            </a>
-
-                            {/* Side Featured Cards */}
-                            <div className="flex flex-col gap-6">
-                                {sideFeatured.map((resource) => (
-                                    <a
-                                        key={resource.id}
-                                        href="#"
-                                        className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition group flex-1"
-                                    >
-                                        <div className="aspect-[16/10] overflow-hidden">
-                                            <img
-                                                src={resource.image}
-                                                alt={resource.title}
-                                                className="w-full h-full object-cover card-image"
-                                            />
-                                        </div>
-                                        <div className="p-5">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className={`px-2.5 py-1 rounded-md text-xs font-medium ${TYPE_COLORS[resource.type]}`}>
-                                                    {resource.type}
-                                                </span>
-                                            </div>
-                                            <h3 className="font-semibold text-gray-900 group-hover:text-accent transition line-clamp-2">
-                                                {resource.title}
-                                            </h3>
-                                        </div>
-                                    </a>
-                                ))}
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </section>
             );
         }
 
-        // Filter Bar
-        function FilterBar({ activeTopic, setActiveTopic, activeType, setActiveType, searchQuery, setSearchQuery }) {
+        // Articles Section
+        function ArticlesSection({ resources, activeTopic, setActiveTopic, searchQuery, setSearchQuery }) {
             return (
-                <section className="sticky top-[65px] z-40 bg-white/95 backdrop-blur-lg border-y border-gray-100 py-4 px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                            {/* Search */}
-                            <div className="relative flex-shrink-0 lg:w-64">
-                                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <section className="px-[100px] py-[104px]">
+                    <div className="max-w-[1240px] mx-auto">
+                        {/* Header with Search */}
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="font-heading text-[44px] leading-[1.2] tracking-[-0.88px] text-primary">
+                                All whitepapers
+                            </h2>
+                            <div className="relative w-[320px]">
+                                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                                 <input
                                     type="text"
-                                    placeholder="Search resources..."
+                                    placeholder="Search"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
+                                    className="w-full bg-white border border-border-divider rounded-sm pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-primary transition placeholder:text-tertiary"
                                 />
                             </div>
+                        </div>
 
-                            {/* Topic Filters */}
-                            <div className="flex-1 overflow-x-auto">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-gray-500 text-sm font-medium mr-2 flex-shrink-0">Topic:</span>
-                                    {TOPICS.map(topic => (
-                                        <button
-                                            key={topic}
-                                            onClick={() => setActiveTopic(topic)}
-                                            className={`filter-btn px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap ${
-                                                activeTopic === topic ? 'active' : 'bg-gray-100 text-gray-600'
-                                            }`}
-                                        >
-                                            {topic}
-                                        </button>
+                        {/* Filters */}
+                        <div className="flex items-center gap-2 mb-10">
+                            {TOPICS.map(topic => (
+                                <button
+                                    key={topic}
+                                    onClick={() => setActiveTopic(topic)}
+                                    className={`filter-btn h-8 px-3 rounded-sm text-sm font-medium border transition ${
+                                        activeTopic === topic
+                                            ? 'active border-border-strong bg-white text-primary'
+                                            : 'border-border-divider bg-white text-primary'
+                                    }`}
+                                >
+                                    {topic}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Content Grid */}
+                        <div className="flex gap-20">
+                            {/* Whitepapers Grid */}
+                            <div className="flex-1">
+                                <div className="grid grid-cols-2 gap-x-10 gap-y-16">
+                                    {resources.map((resource, index) => (
+                                        <WhitepaperCard key={resource.id} resource={resource} index={index} />
                                     ))}
                                 </div>
                             </div>
 
-                            {/* Type Filters */}
-                            <div className="flex items-center gap-2 flex-shrink-0 overflow-x-auto">
-                                <span className="text-gray-500 text-sm font-medium mr-2">Type:</span>
-                                {TYPES.map(type => (
-                                    <button
-                                        key={type}
-                                        onClick={() => setActiveType(type)}
-                                        className={`filter-btn px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap ${
-                                            activeType === type ? 'active' : 'bg-gray-100 text-gray-600'
-                                        }`}
-                                    >
-                                        {type}
-                                    </button>
-                                ))}
+                            {/* From the Blog Sidebar */}
+                            <div className="w-[346px] flex-shrink-0">
+                                <p className="text-xs font-medium text-tertiary uppercase tracking-[0.36px] mb-4">
+                                    from the blog
+                                </p>
+                                <div className="flex flex-col gap-3">
+                                    {BLOG_POSTS.map(post => (
+                                        <BlogCard key={post.id} post={post} />
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -462,124 +384,85 @@
             );
         }
 
-        // Resource Card
-        function ResourceCard({ resource, index }) {
+        // Whitepaper Card
+        function WhitepaperCard({ resource, index }) {
             return (
                 <a
                     href="#"
-                    className="resource-card bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm animate-in"
+                    className="resource-card block animate-in"
                     style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                    <div className="aspect-[16/10] overflow-hidden">
-                        <img
-                            src={resource.image}
-                            alt={resource.title}
-                            className="w-full h-full object-cover card-image"
-                        />
-                    </div>
-                    <div className="p-5">
-                        <div className="flex items-center gap-2 mb-3 flex-wrap">
-                            <span className={`px-2.5 py-1 rounded-md text-xs font-medium ${TYPE_COLORS[resource.type]}`}>
-                                {resource.type}
-                            </span>
-                            {resource.topics.slice(0, 2).map(topic => (
-                                <span key={topic} className="px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600">
-                                    {topic}
-                                </span>
-                            ))}
-                        </div>
-                        <h3 className="font-semibold mb-2 line-clamp-2 text-gray-900 hover:text-accent transition">
-                            {resource.title}
-                        </h3>
-                        <p className="text-gray-500 text-sm line-clamp-2 mb-3">
-                            {resource.excerpt}
-                        </p>
-                        <div className="flex items-center justify-between text-sm text-gray-400">
-                            <span>{resource.date}</span>
-                            <span>{resource.readTime}</span>
+                    {/* Cover Image */}
+                    <div className="whitepaper-gradient rounded-lg h-[214px] mb-6 flex items-center justify-center relative overflow-hidden">
+                        <div className="relative flex items-center justify-center">
+                            {/* Background covers (tilted) */}
+                            <div className="absolute w-[106px] h-[147px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform -rotate-2 -translate-x-3 shadow-md"></div>
+                            <div className="absolute w-[106px] h-[147px] bg-[#ededed] border-2 border-white rounded-lg opacity-40 transform rotate-2 translate-x-3 shadow-md"></div>
+                            {/* Main cover */}
+                            <div className="relative w-[112px] h-[159px] bg-white border-2 border-white rounded-lg shadow-lg overflow-hidden z-10">
+                                <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-200"></div>
+                                <div className="absolute inset-0 flex flex-col p-2">
+                                    <div className="text-[8px] text-primary/60 mb-1">WHITEPAPER</div>
+                                    <div className="font-heading text-[9px] text-primary leading-tight">
+                                        {resource.title}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Title */}
+                    <h3 className="font-heading text-[20px] leading-[1.4] tracking-[-0.4px] text-primary">
+                        {resource.title}
+                    </h3>
                 </a>
             );
         }
 
-        // Resource Grid
-        function ResourceGrid({ resources }) {
-            const [visibleCount, setVisibleCount] = useState(9);
-            const visibleResources = resources.slice(0, visibleCount);
-            const hasMore = visibleCount < resources.length;
-
+        // Blog Card
+        function BlogCard({ post }) {
             return (
-                <section className="py-12 px-6">
-                    <div className="max-w-7xl mx-auto">
-                        {resources.length === 0 ? (
-                            <div className="text-center py-20">
-                                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <h3 className="text-xl font-semibold mb-2 text-gray-900">No resources found</h3>
-                                <p className="text-gray-500">Try adjusting your filters or search query</p>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="flex items-center justify-between mb-6">
-                                    <p className="text-gray-500">
-                                        Showing <span className="text-gray-900 font-medium">{visibleResources.length}</span> of <span className="text-gray-900 font-medium">{resources.length}</span> resources
-                                    </p>
-                                </div>
-                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {visibleResources.map((resource, index) => (
-                                        <ResourceCard key={resource.id} resource={resource} index={index} />
-                                    ))}
-                                </div>
-                                {hasMore && (
-                                    <div className="mt-12 text-center">
-                                        <button
-                                            onClick={() => setVisibleCount(prev => prev + 6)}
-                                            className="bg-white hover:bg-gray-50 border border-gray-200 text-gray-900 px-8 py-3 rounded-lg font-medium transition"
-                                        >
-                                            Load More
-                                        </button>
-                                    </div>
-                                )}
-                            </>
-                        )}
+                <div className="flex gap-4 items-center h-[126px]">
+                    <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-[126px] h-[126px] rounded-md object-cover flex-shrink-0"
+                    />
+                    <div className="py-2 flex-1">
+                        <p className="font-medium text-base leading-[1.5] text-primary mb-3">
+                            {post.title}
+                        </p>
+                        <a href="#" className="link-btn inline-flex items-center gap-1.5 text-sm font-medium text-primary transition">
+                            Read more
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </a>
                     </div>
-                </section>
+                </div>
             );
         }
 
-        // Newsletter CTA
-        function NewsletterCTA() {
+        // Newsletter Section
+        function Newsletter() {
             return (
-                <section className="py-4 px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="bg-gray-900 rounded-2xl p-8 md:p-12">
-                            <div className="max-w-2xl mx-auto text-center">
-                                <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">
-                                    Stay ahead of emerging threats
-                                </h2>
-                                <p className="text-gray-300 mb-8">
-                                    Get the latest security insights, product updates, and exclusive content delivered to your inbox.
+                <section className="px-[100px] py-14">
+                    <div className="max-w-[1240px] mx-auto">
+                        <div className="bg-white border border-border-light rounded-lg overflow-hidden">
+                            <div className="flex items-center justify-between px-[180px] py-7">
+                                <p className="text-base text-primary">
+                                    Sign up to newsletter and never miss new stories
                                 </p>
-                                <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                                <div className="flex gap-1.5">
                                     <input
                                         type="email"
-                                        placeholder="Enter your email"
-                                        className="flex-1 bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent transition"
+                                        placeholder="Your email"
+                                        className="w-[230px] border border-border-divider rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition placeholder:text-tertiary"
                                     />
-                                    <button
-                                        type="submit"
-                                        className="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition whitespace-nowrap"
-                                    >
+                                    <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-sm text-sm font-medium transition">
                                         Subscribe
                                     </button>
-                                </form>
-                                <p className="text-gray-500 text-sm mt-4">
-                                    No spam. Unsubscribe anytime.
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -590,66 +473,112 @@
         // Footer
         function Footer() {
             return (
-                <footer className="bg-white border-t border-gray-100 py-16 px-6 mt-8">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-                            {/* Logo & Description */}
-                            <div className="col-span-2">
+                <footer className="bg-white border-t border-border-light px-[100px] py-16">
+                    <div className="max-w-[1240px] mx-auto">
+                        {/* Newsletter Bar */}
+                        <div className="bg-primary rounded-lg p-8 mb-16">
+                            <div className="flex items-center justify-between">
+                                <p className="text-white text-lg">
+                                    Adaptive security awareness training your team loves
+                                </p>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="email"
+                                        placeholder="Your work email..."
+                                        className="w-[280px] bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-sm text-white placeholder:text-white/60 focus:outline-none focus:border-white/40 transition"
+                                    />
+                                    <button className="bg-white text-primary px-5 py-3 rounded-sm text-sm font-medium hover:bg-white/90 transition">
+                                        Get a demo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Footer Links */}
+                        <div className="grid grid-cols-6 gap-8 mb-12">
+                            {/* Logo */}
+                            <div className="col-span-1">
                                 <div className="flex items-center gap-2 mb-4">
-                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect width="32" height="32" rx="8" fill="#EA580C"/>
+                                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="32" height="32" rx="6" fill="#262626"/>
                                         <path d="M10 18.5V13.5C10 12.1193 11.1193 11 12.5 11H19.5C20.8807 11 22 12.1193 22 13.5V18.5C22 19.8807 20.8807 21 19.5 21H12.5C11.1193 21 10 19.8807 10 18.5Z" stroke="white" strokeWidth="2"/>
                                         <rect x="14" y="14" width="4" height="4" rx="1" fill="white"/>
                                     </svg>
-                                    <span className="font-semibold text-gray-900">Adaptive Security</span>
+                                    <span className="font-medium text-primary">Adaptive</span>
                                 </div>
-                                <p className="text-gray-500 text-sm max-w-xs">
-                                    AI-native security awareness training that prepares your workforce for tomorrow's threats.
+                                <p className="text-sm text-secondary mb-4">
+                                    302 Broadway, 9Fl,<br/>
+                                    New York, NY 10001
                                 </p>
+                                <a href="mailto:hello@yoursite.com" className="text-sm text-secondary hover:text-primary transition">
+                                    hello@adaptivesecurity.com
+                                </a>
                             </div>
 
-                            {/* Product */}
+                            {/* Products */}
                             <div>
-                                <h4 className="font-semibold text-gray-900 mb-4">Product</h4>
-                                <ul className="space-y-3 text-sm text-gray-500">
-                                    <li><a href="#" className="hover:text-gray-900 transition">Platform</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Phishing Simulations</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Deepfake Training</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Pricing</a></li>
+                                <h4 className="font-medium text-sm text-primary mb-4">PRODUCTS</h4>
+                                <ul className="space-y-3 text-sm text-secondary">
+                                    <li><a href="#" className="hover:text-primary transition">Security Awareness Training</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">AI & Deepfake Threat Training</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Compliance & Policy Training</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Custom Video Content</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Solutions */}
+                            <div>
+                                <h4 className="font-medium text-sm text-primary mb-4">SOLUTIONS</h4>
+                                <ul className="space-y-3 text-sm text-secondary">
+                                    <li><a href="#" className="hover:text-primary transition">Enterprise</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Mid-Market</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">SMBs</a></li>
                                 </ul>
                             </div>
 
                             {/* Resources */}
                             <div>
-                                <h4 className="font-semibold text-gray-900 mb-4">Resources</h4>
-                                <ul className="space-y-3 text-sm text-gray-500">
-                                    <li><a href="#" className="hover:text-gray-900 transition">Blog</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Guides</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Case Studies</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Events</a></li>
+                                <h4 className="font-medium text-sm text-primary mb-4">RESOURCES</h4>
+                                <ul className="space-y-3 text-sm text-secondary">
+                                    <li><a href="#" className="hover:text-primary transition">Blog</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Whitepapers</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Press</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Glossary</a></li>
                                 </ul>
                             </div>
 
                             {/* Company */}
                             <div>
-                                <h4 className="font-semibold text-gray-900 mb-4">Company</h4>
-                                <ul className="space-y-3 text-sm text-gray-500">
-                                    <li><a href="#" className="hover:text-gray-900 transition">About</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Careers</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Contact</a></li>
-                                    <li><a href="#" className="hover:text-gray-900 transition">Press</a></li>
+                                <h4 className="font-medium text-sm text-primary mb-4">COMPANY</h4>
+                                <ul className="space-y-3 text-sm text-secondary">
+                                    <li><a href="#" className="hover:text-primary transition">About</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Careers</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Why Adaptive</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Partners</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Support */}
+                            <div>
+                                <h4 className="font-medium text-sm text-primary mb-4">SUPPORT</h4>
+                                <ul className="space-y-3 text-sm text-secondary">
+                                    <li><a href="#" className="hover:text-primary transition">Security</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Trust Center</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Help Center</a></li>
+                                    <li><a href="#" className="hover:text-primary transition">Support</a></li>
                                 </ul>
                             </div>
                         </div>
 
-                        <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                            <p className="text-gray-400 text-sm">
-                                &copy; 2025 Adaptive Security. All rights reserved.
+                        {/* Bottom */}
+                        <div className="border-t border-border-light pt-8 flex items-center justify-between">
+                            <p className="text-sm text-tertiary">
+                                &copy; 2025 Adaptive, a product of YouGov AI Inc.
                             </p>
-                            <div className="flex items-center gap-6 text-sm text-gray-500">
-                                <a href="#" className="hover:text-gray-900 transition">Privacy</a>
-                                <a href="#" className="hover:text-gray-900 transition">Terms</a>
-                                <a href="#" className="hover:text-gray-900 transition">Security</a>
+                            <div className="flex items-center gap-6 text-sm text-secondary">
+                                <a href="#" className="hover:text-primary transition">Privacy</a>
+                                <a href="#" className="hover:text-primary transition">Terms of use</a>
+                                <a href="#" className="hover:text-primary transition">Privacy policy</a>
                             </div>
                         </div>
                     </div>
@@ -660,26 +589,23 @@
         // Main App
         function App() {
             const [activeTopic, setActiveTopic] = useState("All");
-            const [activeType, setActiveType] = useState("All");
             const [searchQuery, setSearchQuery] = useState("");
+
+            const featuredResource = RESOURCES.find(r => r.featured);
 
             const filteredResources = useMemo(() => {
                 return RESOURCES.filter(resource => {
-                    // Topic filter
-                    if (activeTopic !== "All" && !resource.topics.includes(activeTopic)) {
-                        return false;
-                    }
+                    // Don't show featured in the grid
+                    if (resource.featured) return false;
 
-                    // Type filter
-                    if (activeType !== "All") {
-                        const typeMap = {
-                            "Guides": "Guide",
-                            "Product Updates": "Product Update",
-                            "Videos": "Video",
-                            "Blogs": "Blog",
-                            "Events": "Event"
+                    // Topic filter
+                    if (activeTopic !== "All") {
+                        const topicMap = {
+                            "Security awareness": "Security Awareness",
+                            "Phishing": "Phishing",
+                            "AI": "AI"
                         };
-                        if (resource.type !== typeMap[activeType]) {
+                        if (!resource.topics.includes(topicMap[activeTopic])) {
                             return false;
                         }
                     }
@@ -696,29 +622,21 @@
 
                     return true;
                 });
-            }, [activeTopic, activeType, searchQuery]);
-
-            // Non-featured resources for grid
-            const gridResources = filteredResources.filter(r => !r.featured || activeTopic !== "All" || activeType !== "All" || searchQuery);
+            }, [activeTopic, searchQuery]);
 
             return (
-                <div className="min-h-screen">
+                <div className="min-h-screen bg-white">
                     <TopBanner />
                     <Nav />
-                    <Hero />
-                    {activeTopic === "All" && activeType === "All" && !searchQuery && (
-                        <FeaturedResources resources={RESOURCES} />
-                    )}
-                    <FilterBar
+                    <Hero featuredResource={featuredResource} />
+                    <ArticlesSection
+                        resources={filteredResources}
                         activeTopic={activeTopic}
                         setActiveTopic={setActiveTopic}
-                        activeType={activeType}
-                        setActiveType={setActiveType}
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
                     />
-                    <ResourceGrid resources={gridResources} />
-                    <NewsletterCTA />
+                    <Newsletter />
                     <Footer />
                 </div>
             );
