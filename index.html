@@ -339,16 +339,16 @@
                             </div>
                         </div>
 
-                        {/* Filters */}
+                        {/* Simple Filter Pills - matching Figma exactly */}
                         <div className="flex items-center gap-2 mb-10">
                             {TOPICS.map(topic => (
                                 <button
                                     key={topic}
                                     onClick={() => setActiveTopic(topic)}
-                                    className={`filter-btn h-8 px-3 rounded-sm text-sm font-medium border transition ${
+                                    className={`filter-btn h-8 px-3 rounded-sm text-sm font-medium border transition whitespace-nowrap ${
                                         activeTopic === topic
-                                            ? 'active border-border-strong bg-white text-primary'
-                                            : 'border-border-divider bg-white text-primary'
+                                            ? 'active border-primary bg-white text-primary'
+                                            : 'border-border-divider bg-white text-primary hover:bg-gray-50'
                                     }`}
                                 >
                                     {topic}
