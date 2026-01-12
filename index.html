@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -120,6 +121,71 @@
         .badge-blog { background: #F3E8FF; color: #7C3AED; }
         .badge-event { background: #DCFCE7; color: #16A34A; }
         .badge-update { background: #FEF3C7; color: #D97706; }
+
+        /* Custom dropdown styles */
+        .custom-dropdown {
+            position: relative;
+        }
+        .custom-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            min-width: 200px;
+            background: white;
+            border: 1px solid #d8d8d8;
+            border-radius: 6px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease;
+        }
+        .custom-dropdown.open .custom-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .custom-dropdown-item {
+            padding: 10px 16px;
+            font-size: 14px;
+            color: #262626;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .custom-dropdown-item:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+        .custom-dropdown-item:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+        .custom-dropdown-item:hover {
+            background: #f5f5f5;
+        }
+        .custom-dropdown-item.selected {
+            background: #262626;
+            color: white;
+        }
+
+        /* Swiper custom styles */
+        .featured-swiper {
+            padding-bottom: 50px !important;
+        }
+        .featured-swiper .swiper-pagination {
+            bottom: 0 !important;
+        }
+        .featured-swiper .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+            background: #d8d8d8;
+            opacity: 1;
+            transition: all 0.3s ease;
+        }
+        .featured-swiper .swiper-pagination-bullet-active {
+            width: 24px;
+            border-radius: 4px;
+            background: #262626;
+        }
     </style>
 </head>
 <body>
@@ -128,26 +194,91 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script type="text/babel">
-        const { useState, useMemo } = React;
+        const { useState, useMemo, useEffect, useRef } = React;
 
         // Resource types
         const TYPES = ["All Types", "Guide", "Video", "Blog", "Event", "Product Update"];
         const TOPICS = ["All Topics", "Security Awareness", "Phishing", "AI & Deepfakes", "Compliance"];
 
-        // Sample resource data with multiple types
-        const RESOURCES = [
+        // Featured resources for the carousel
+        const FEATURED_RESOURCES = [
             {
                 id: 1,
-                type: "Guide",
-                topic: "AI & Deepfakes",
-                title: "Deepfake-Proofing Your Workforce",
-                excerpt: "Your ultimate resource for evolving your security awareness training program to tackle deepfake threats.",
-                date: "Jan 8, 2025",
-                featured: true,
-                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop"
+                type: "Blog",
+                topic: "AI",
+                title: "A Security Leader's Playbook for Role-Based AI Threat Training",
+                date: "Aug 29, 2025",
+                readTime: "8 min read",
+                author: {
+                    name: "Justin Herrick",
+                    role: "Content Manager",
+                    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=face"
+                },
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop"
             },
+            {
+                id: 2,
+                type: "Guide",
+                topic: "Deepfakes",
+                title: "Deepfake-Proofing Your Workforce: The Complete Enterprise Guide",
+                date: "Aug 15, 2025",
+                readTime: "12 min read",
+                author: {
+                    name: "Sarah Chen",
+                    role: "Security Researcher",
+                    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=face"
+                },
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=500&fit=crop"
+            },
+            {
+                id: 3,
+                type: "Blog",
+                topic: "Phishing",
+                title: "2025 Phishing Trends: How AI is Changing the Threat Landscape",
+                date: "Aug 10, 2025",
+                readTime: "6 min read",
+                author: {
+                    name: "Marcus Williams",
+                    role: "Threat Analyst",
+                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face"
+                },
+                image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=500&fit=crop"
+            },
+            {
+                id: 4,
+                type: "Guide",
+                topic: "Security Awareness",
+                title: "Building a Security-First Culture: A Framework for Modern Teams",
+                date: "Aug 5, 2025",
+                readTime: "10 min read",
+                author: {
+                    name: "Emily Rodriguez",
+                    role: "Training Director",
+                    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=face"
+                },
+                image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=500&fit=crop"
+            },
+            {
+                id: 5,
+                type: "Blog",
+                topic: "AI",
+                title: "Voice Cloning Attacks: What Every Security Team Needs to Know",
+                date: "Jul 28, 2025",
+                readTime: "7 min read",
+                author: {
+                    name: "David Park",
+                    role: "AI Security Lead",
+                    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=face"
+                },
+                image: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&h=500&fit=crop"
+            }
+        ];
+
+        // Sample resource data with multiple types
+        const RESOURCES = [
             {
                 id: 2,
                 type: "Video",
@@ -313,18 +444,74 @@
             );
         }
 
-        // Hero with Featured Resource
-        function Hero({ featuredResource }) {
-            const getBadgeClass = (type) => {
-                const classes = {
-                    'Guide': 'badge-guide',
-                    'Video': 'badge-video',
-                    'Blog': 'badge-blog',
-                    'Event': 'badge-event',
-                    'Product Update': 'badge-update'
-                };
-                return classes[type] || 'badge-guide';
-            };
+        // Featured Carousel Slide
+        function FeaturedSlide({ resource }) {
+            return (
+                <a href="#" className="block bg-white rounded-lg border border-border-light overflow-hidden hover:shadow-lg transition group">
+                    <div className="flex">
+                        {/* Image */}
+                        <div className="resource-gradient w-[55%] h-[420px] flex-shrink-0 relative overflow-hidden">
+                            <img
+                                src={resource.image}
+                                alt={resource.title}
+                                className="w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition duration-500"
+                            />
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 p-10 flex flex-col justify-center">
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="inline-flex items-center justify-center h-6 px-2 border border-border-divider rounded-xs text-xs font-medium text-primary">
+                                    Featured
+                                </span>
+                                <span className="inline-flex items-center h-6 px-2 rounded-xs text-xs font-medium bg-[#E0F2FE] text-[#0369A1]">
+                                    {resource.topic}
+                                </span>
+                                <span className="text-xs text-tertiary">{resource.readTime}</span>
+                            </div>
+                            <h2 className="font-heading text-[40px] leading-[1.15] tracking-[-0.8px] text-primary mb-6">
+                                {resource.title}
+                            </h2>
+                            <p className="text-sm text-tertiary mb-8">{resource.date}</p>
+
+                            {/* Author */}
+                            <div className="flex items-center gap-3">
+                                <img
+                                    src={resource.author.avatar}
+                                    alt={resource.author.name}
+                                    className="w-10 h-10 rounded-full object-cover"
+                                />
+                                <div>
+                                    <p className="text-sm font-medium text-primary">{resource.author.name}</p>
+                                    <p className="text-xs text-tertiary">{resource.author.role}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            );
+        }
+
+        // Hero with Featured Swiper
+        function Hero() {
+            const swiperRef = useRef(null);
+
+            useEffect(() => {
+                if (swiperRef.current && window.Swiper) {
+                    new window.Swiper(swiperRef.current, {
+                        loop: true,
+                        autoplay: {
+                            delay: 5000,
+                            disableOnInteraction: false,
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        speed: 600,
+                    });
+                }
+            }, []);
 
             return (
                 <section className="bg-gradient-to-b from-transparent to-[#f5f5f5] px-[100px] py-[104px]">
@@ -339,44 +526,68 @@
                             </p>
                         </div>
 
-                        {/* Featured Resource */}
-                        <a href="#" className="block bg-white rounded-lg border border-border-light overflow-hidden hover:shadow-lg transition group">
-                            <div className="flex">
-                                {/* Image */}
-                                <div className="resource-gradient w-[55%] h-[400px] flex-shrink-0 relative overflow-hidden">
-                                    <img
-                                        src={featuredResource.image}
-                                        alt={featuredResource.title}
-                                        className="w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition duration-500"
-                                    />
-                                </div>
-
-                                {/* Content */}
-                                <div className="flex-1 p-10 flex flex-col justify-center">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <span className="inline-flex items-center justify-center h-6 px-2 border border-border-divider rounded-xs text-xs font-medium text-primary">
-                                            Featured
-                                        </span>
-                                        <span className={`inline-flex items-center h-6 px-2 rounded-xs text-xs font-medium ${getBadgeClass(featuredResource.type)}`}>
-                                            {featuredResource.type}
-                                        </span>
+                        {/* Featured Swiper */}
+                        <div ref={swiperRef} className="swiper featured-swiper">
+                            <div className="swiper-wrapper">
+                                {FEATURED_RESOURCES.map(resource => (
+                                    <div key={resource.id} className="swiper-slide">
+                                        <FeaturedSlide resource={resource} />
                                     </div>
-                                    <h2 className="font-heading text-[36px] leading-[1.2] tracking-[-0.72px] text-primary mb-4">
-                                        {featuredResource.title}
-                                    </h2>
-                                    <p className="text-base leading-[1.6] text-secondary mb-6">
-                                        {featuredResource.excerpt}
-                                    </p>
-                                    <div className="flex items-center gap-4 text-sm text-tertiary">
-                                        <span>{featuredResource.date}</span>
-                                        <span>•</span>
-                                        <span>{featuredResource.topic}</span>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
-                        </a>
+                            <div className="swiper-pagination"></div>
+                        </div>
                     </div>
                 </section>
+            );
+        }
+
+        // Custom Dropdown Component
+        function CustomDropdown({ value, onChange, options, label }) {
+            const [isOpen, setIsOpen] = useState(false);
+            const dropdownRef = useRef(null);
+
+            useEffect(() => {
+                function handleClickOutside(event) {
+                    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                        setIsOpen(false);
+                    }
+                }
+                document.addEventListener('mousedown', handleClickOutside);
+                return () => document.removeEventListener('mousedown', handleClickOutside);
+            }, []);
+
+            return (
+                <div ref={dropdownRef} className={`custom-dropdown ${isOpen ? 'open' : ''}`}>
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="h-8 px-3 pr-8 rounded-sm text-sm font-medium border border-border-divider bg-white text-primary hover:bg-gray-50 transition flex items-center gap-2 relative"
+                    >
+                        {value === options[0] ? label : value}
+                        <svg
+                            className={`absolute right-2 w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div className="custom-dropdown-menu">
+                        {options.map(option => (
+                            <div
+                                key={option}
+                                onClick={() => {
+                                    onChange(option);
+                                    setIsOpen(false);
+                                }}
+                                className={`custom-dropdown-item ${value === option ? 'selected' : ''}`}
+                            >
+                                {option}
+                            </div>
+                        ))}
+                    </div>
+                </div>
             );
         }
 
@@ -411,19 +622,15 @@
                                 {/* Divider */}
                                 <div className="w-px h-6 bg-border-divider"></div>
 
-                                {/* Topic Filter */}
+                                {/* Topic Filter - Custom Dropdown */}
                                 <div className="flex items-center gap-2">
                                     <span className="text-xs font-medium text-tertiary uppercase tracking-wide">Topic:</span>
-                                    <select
+                                    <CustomDropdown
                                         value={activeTopic}
-                                        onChange={(e) => setActiveTopic(e.target.value)}
-                                        className="h-8 px-3 pr-8 rounded-sm text-sm font-medium border border-border-divider bg-white text-primary focus:outline-none focus:border-primary cursor-pointer appearance-none"
-                                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23262626' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
-                                    >
-                                        {TOPICS.map(topic => (
-                                            <option key={topic} value={topic}>{topic}</option>
-                                        ))}
-                                    </select>
+                                        onChange={setActiveTopic}
+                                        options={TOPICS}
+                                        label="All Topics"
+                                    />
                                 </div>
                             </div>
 
@@ -730,13 +937,8 @@
             const [activeTopic, setActiveTopic] = useState("All Topics");
             const [searchQuery, setSearchQuery] = useState("");
 
-            const featuredResource = RESOURCES.find(r => r.featured);
-
             const filteredResources = useMemo(() => {
                 return RESOURCES.filter(resource => {
-                    // Don't show featured in the grid
-                    if (resource.featured) return false;
-
                     // Type filter
                     if (activeType !== "All Types" && resource.type !== activeType) {
                         return false;
@@ -766,7 +968,7 @@
                 <div className="min-h-screen bg-white">
                     <TopBanner />
                     <Nav />
-                    <Hero featuredResource={featuredResource} />
+                    <Hero />
                     <FilterBar
                         activeType={activeType}
                         setActiveType={setActiveType}
