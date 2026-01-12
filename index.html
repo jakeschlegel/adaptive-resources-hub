@@ -561,9 +561,9 @@
                 <div ref={dropdownRef} className={`custom-dropdown ${isOpen ? 'open' : ''}`}>
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="h-8 px-3 pr-8 rounded-sm text-sm font-medium border border-border-divider bg-white text-primary hover:bg-gray-50 transition flex items-center gap-2 relative"
+                        className="h-8 px-3 pr-8 rounded-sm text-sm font-medium border border-border-divider bg-white text-primary hover:bg-gray-50 transition flex items-center gap-2 relative whitespace-nowrap"
                     >
-                        {value === options[0] ? label : value}
+                        {value}
                         <svg
                             className={`absolute right-2 w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                             fill="none"
